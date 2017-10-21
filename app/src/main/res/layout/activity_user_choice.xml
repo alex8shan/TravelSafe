@@ -6,19 +6,37 @@
     android:layout_height="match_parent"
     tools:context="com.example.ridesafe.userChoice">
 
-    <TextView
-        android:id="@+id/textView3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Please choose your contact information"
-        tools:layout_editor_absoluteX="68dp"
-        tools:layout_editor_absoluteY="106dp" />
-
     <Button
         android:id="@+id/button2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Choose your contact"
-        tools:layout_editor_absoluteX="99dp"
-        tools:layout_editor_absoluteY="170dp" />
+        android:text="Add Contact Information"
+        tools:layout_editor_absoluteX="84dp"
+        tools:layout_editor_absoluteY="34dp" />
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Enter your message here:"
+        tools:layout_editor_absoluteX="131dp"
+        tools:layout_editor_absoluteY="104dp" />
+
+    <EditText
+        android:id="@+id/editText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:inputType="textMultiLine"
+        tools:layout_editor_absoluteY="160dp"
+        tools:layout_editor_absoluteX="85dp" />
+
+    <Button
+        android:id="@+id/button3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Set Time"
+        tools:layout_editor_absoluteX="148dp"
+        tools:layout_editor_absoluteY="319dp" />
+
 </android.support.constraint.ConstraintLayout>
