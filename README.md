@@ -1,4 +1,4 @@
-# rideSafe
+# Safe Travel
 Have you ever been to somewhere unsafe and wanted to let people you care about to know that you are safe?
 This is an app that does exactly that! 
 The user can enter the designated location, the estimated time to get there and select contacts to send text messages to.
