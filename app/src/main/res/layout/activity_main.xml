@@ -11,12 +11,18 @@
         android:id="@+id/txtMain"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+<<<<<<< HEAD
         android:scrollbars="vertical"
         android:text="Hello World!"
+=======
+        android:text="Welcome!"
+>>>>>>> 3fa0c30b4b251a2c243665a9aeba62d4604886e4
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintHorizontal_bias="0.142"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
+<<<<<<< HEAD
         app:layout_constraintVertical_bias="0.967" />
 
     <RelativeLayout
@@ -69,5 +75,25 @@
         android:text="Button"
         app:layout_constraintRight_toRightOf="parent"
         tools:layout_editor_absoluteY="-1dp" />
+=======
+        app:layout_constraintVertical_bias="0.103"
+        android:id="@+id/textView2" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="This app will send the message to any contact you choose if you got kidnapped"
+        tools:layout_editor_absoluteX="16dp"
+        tools:layout_editor_absoluteY="124dp" />
+
+    <Button
+        android:id="@+id/button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose your location"
+        tools:layout_editor_absoluteX="97dp"
+        tools:layout_editor_absoluteY="238dp" />
+>>>>>>> 3fa0c30b4b251a2c243665a9aeba62d4604886e4
 
 </android.support.constraint.ConstraintLayout>

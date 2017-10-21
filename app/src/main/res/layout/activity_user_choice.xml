@@ -6,4 +6,19 @@
     android:layout_height="match_parent"
     tools:context="com.example.ridesafe.userChoice">
 
+    <TextView
+        android:id="@+id/textView3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Please choose your contact information"
+        tools:layout_editor_absoluteX="68dp"
+        tools:layout_editor_absoluteY="106dp" />
+
+    <Button
+        android:id="@+id/button2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Choose your contact"
+        tools:layout_editor_absoluteX="99dp"
+        tools:layout_editor_absoluteY="170dp" />
 </android.support.constraint.ConstraintLayout>
