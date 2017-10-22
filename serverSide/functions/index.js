@@ -13,12 +13,12 @@ var client = new twilio('ACa09242192633777e218acddb9ac1512e', 'f670275673b53ccb6
 //  response.send("Hello from Firebase!");
 // });
 
-exports.helloWorld = functions.database.ref('/users/{userId}/time').onWrite(event => {
-    var something = "Hello World!";
+exports.helloWorld = functions.database.ref('/users/{userId}/panic').onWrite(event => {
+    var something = event.data.ref.parent.child('location').limitToLast(1);
     client.messages.create({
         to:'+16609566645',
         from:'+14153607309',
-        body:'ahoy hoy! Testing Twilio and node.js'
+        body: something
     }, function(error, message) {
         // The HTTP request to Twilio will run asynchronously. This callback
         // function will be called when a response is received from Twilio

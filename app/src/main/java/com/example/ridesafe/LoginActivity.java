@@ -19,6 +19,8 @@ import com.google.android.gms.common.SignInButton;
 import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.common.api.Status;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 public class LoginActivity extends AppCompatActivity implements GoogleApiClient.OnConnectionFailedListener{
 
@@ -29,6 +31,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private final String TAG = "Ridesafe";
     public final static int RC_SIGN_IN = 9001;
     public static String Authid;
+    private FirebaseAuth mAuth;
 
 
     @Override
@@ -56,11 +59,20 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 signOut();
             }
         });
+
+        mAuth = FirebaseAuth.getInstance();
     }
 
     public void signIn(){
         Intent signInIntent = Auth.GoogleSignInApi.getSignInIntent(mgac);
         startActivityForResult(signInIntent, RC_SIGN_IN);
+    }
+
+    @Override
+    public void onStart(){
+        super.onStart();
+
+
     }
 
     @Override
@@ -70,10 +82,18 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             GoogleSignInAccount acct = result.getSignInAccount();
             Authid = acct.getId();
             textView.setText(Authid);
-            Intent intent = new Intent(this, Main2Activity.class);
-            startActivity(intent);
-            this.finish();
-            Log.i(TAG, "Activity switched!");
+            if (Backupload.mRunning) {
+                Intent intent = new Intent(this, PanicButton.class);
+                startActivity(intent);
+                this.finish();
+                Log.i(TAG, "Activity switched!");
+            }
+            else{
+                Intent intent = new Intent(this, Main2Activity.class);
+                startActivity(intent);
+                this.finish();
+                Log.i(TAG, "Activity switched!");
+            }
         }
     }
 

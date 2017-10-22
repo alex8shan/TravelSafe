@@ -50,6 +50,12 @@ public class userChoice extends AppCompatActivity {
                     childRef.child("message").setValue(message);
                     childRef.child("minutes").setValue(minutes);
                 }
+                Intent intent = new Intent(getApplicationContext(), Backupload.class);
+                intent.putExtra("ID", LoginActivity.Authid);
+                startService(intent);
+                intent = new Intent(getApplicationContext(), PanicButton.class);
+                startActivity(intent);
+                userChoice.this.finish();
             }
         });
     }

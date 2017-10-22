@@ -1,91 +1,149 @@
 package com.example.ridesafe;
 
-import android.app.IntentService;
+import android.Manifest;
+import android.app.Service;
 import android.content.Intent;
-import android.content.Context;
+import android.content.pm.PackageManager;
+import android.location.Location;
+import android.os.Bundle;
+import android.os.IBinder;
+import android.support.annotation.Nullable;
+import android.support.v4.app.ActivityCompat;
+import android.util.Log;
 
-/**
- * An {@link IntentService} subclass for handling asynchronous task requests in
- * a service on a separate handler thread.
- * <p>
- * TODO: Customize class - update intent actions, extra parameters and static
- * helper methods.
- */
-public class Backupload extends IntentService {
-    // TODO: Rename actions, choose action names that describe tasks that this
-    // IntentService can perform, e.g. ACTION_FETCH_NEW_ITEMS
-    private static final String ACTION_FOO = "com.example.ridesafe.action.FOO";
-    private static final String ACTION_BAZ = "com.example.ridesafe.action.BAZ";
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
-    // TODO: Rename parameters
-    private static final String EXTRA_PARAM1 = "com.example.ridesafe.extra.PARAM1";
-    private static final String EXTRA_PARAM2 = "com.example.ridesafe.extra.PARAM2";
+public class Backupload extends Service implements GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener, com.google.android.gms.location.LocationListener {
+    private LocationRequest mLocationRequest;
+    private GoogleApiClient mGoogleApiClient;
+    private static final String LOGSERVICE = "#######";
+    private String authId = LoginActivity.Authid;
+    public static boolean mRunning;
 
-    public Backupload() {
-        super("Backupload");
-    }
+    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference childRef;
 
-    /**
-     * Starts this service to perform action Foo with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionFoo(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, Backupload.class);
-        intent.setAction(ACTION_FOO);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
-    }
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        buildGoogleApiClient();
+        Log.i(LOGSERVICE, "onCreate");
 
-    /**
-     * Starts this service to perform action Baz with the given parameters. If
-     * the service is already performing a task this action will be queued.
-     *
-     * @see IntentService
-     */
-    // TODO: Customize helper method
-    public static void startActionBaz(Context context, String param1, String param2) {
-        Intent intent = new Intent(context, Backupload.class);
-        intent.setAction(ACTION_BAZ);
-        intent.putExtra(EXTRA_PARAM1, param1);
-        intent.putExtra(EXTRA_PARAM2, param2);
-        context.startService(intent);
+
+
     }
 
     @Override
-    protected void onHandleIntent(Intent intent) {
-        if (intent != null) {
-            final String action = intent.getAction();
-            if (ACTION_FOO.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionFoo(param1, param2);
-            } else if (ACTION_BAZ.equals(action)) {
-                final String param1 = intent.getStringExtra(EXTRA_PARAM1);
-                final String param2 = intent.getStringExtra(EXTRA_PARAM2);
-                handleActionBaz(param1, param2);
-            }
+    public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(LOGSERVICE, "onStartCommand");
+
+        if (!mGoogleApiClient.isConnected())
+            mGoogleApiClient.connect();
+
+        authId = LoginActivity.Authid;
+        childRef = mRootRef.child("users/" + authId + "/location");
+
+        mRunning = true;
+
+        return START_STICKY;
+    }
+
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        Log.i(LOGSERVICE, "onConnected" + bundle);
+
+        Location l = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        if (l != null) {
+            Log.i(LOGSERVICE, "lat " + l.getLatitude());
+            Log.i(LOGSERVICE, "lng " + l.getLongitude());
+
         }
+
+        startLocationUpdate();
     }
 
-    /**
-     * Handle action Foo in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionFoo(String param1, String param2) {
-        // TODO: Handle action Foo
-        throw new UnsupportedOperationException("Not yet implemented");
+    @Override
+    public void onConnectionSuspended(int i) {
+        Log.i(LOGSERVICE, "onConnectionSuspended " + i);
+
     }
 
-    /**
-     * Handle action Baz in the provided background thread with the provided
-     * parameters.
-     */
-    private void handleActionBaz(String param1, String param2) {
-        // TODO: Handle action Baz
-        throw new UnsupportedOperationException("Not yet implemented");
+    @Override
+    public void onLocationChanged(Location location) {
+        Log.i(LOGSERVICE, "lat " + location.getLatitude());
+        Log.i(LOGSERVICE, "lng " + location.getLongitude());
+        LatLng mLocation = (new LatLng(location.getLatitude(), location.getLongitude()));
+
+        Long tsLong = System.currentTimeMillis()/1000;
+        String ts = tsLong.toString();
+
+        childRef.child(ts).child("lat").setValue(mLocation.latitude);
+        childRef.child(ts).child("lon").setValue(mLocation.longitude);
+
     }
+
+    @Override
+    public void onDestroy() {
+        mRunning = false;
+        super.onDestroy();
+        Log.i(LOGSERVICE, "onDestroy - Estou sendo destruido ");
+
+    }
+
+    @Nullable
+    @Override
+    public IBinder onBind(Intent intent) {
+        return null;
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Log.i(LOGSERVICE, "onConnectionFailed ");
+
+    }
+
+    private void initLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(60000);
+        mLocationRequest.setFastestInterval(50000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+
+    }
+
+    private void startLocationUpdate() {
+        initLocationRequest();
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    private void stopLocationUpdate() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addOnConnectionFailedListener(this)
+                .addConnectionCallbacks(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
 }
