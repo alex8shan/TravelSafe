@@ -8,17 +8,27 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Toast;
+
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
 
 public class userChoice extends AppCompatActivity {
     private final int PICK_CONTACT = 2345;
+    private String contactNumber = "";
+    private String message = "";
+    private int minutes = 0;
+
+    DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
+    DatabaseReference childRef = mRootRef.child("users/" + LoginActivity.Authid);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_choice);
 
-        Button btnContact = (Button) findViewById(R.id.button2);
+        Button btnContact = (Button) findViewById(R.id.btnContact);
         btnContact.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -27,11 +37,19 @@ public class userChoice extends AppCompatActivity {
             }
         });
 
-        Button btnNext = (Button) findViewById(R.id.button3);
+        Button btnNext = (Button) findViewById(R.id.btnConfirm);
         btnNext.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                
+                EditText edtMsg = (EditText) findViewById(R.id.edtMsg);
+                EditText edtMin = (EditText) findViewById(R.id.editText3);
+                message = edtMsg.getText().toString();
+                minutes = Integer.parseInt(edtMin.getText().toString());
+                if (contactNumber != "" && message != "" && minutes != 0){
+                    childRef.child("contact").setValue(contactNumber);
+                    childRef.child("message").setValue(message);
+                    childRef.child("minutes").setValue(minutes);
+                }
             }
         });
     }
@@ -58,6 +76,7 @@ public class userChoice extends AppCompatActivity {
                     }
                     phones.close();
                     //Do something with number
+                    contactNumber = number;
                     Toast.makeText(getApplicationContext(), number, Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getApplicationContext(), "This contact has no phone number", Toast.LENGTH_LONG).show();
@@ -65,6 +84,11 @@ public class userChoice extends AppCompatActivity {
                 cursor.close();
             }
         }
+    }
+
+    @Override
+    protected void onStart(){
+        super.onStart();
     }
 }
 

@@ -46,7 +46,7 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
     private GoogleApiClient mgac;
     private LocationRequest rl;
     private Marker dest;
-    private LatLng desti;
+    public static LatLng desti;
     private boolean first;
 
     @Override
@@ -65,7 +65,6 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
             public void onClick(View view) {
                 if (desti != null) {
                     Intent intent = new Intent(getApplicationContext(), userChoice.class);
-                    intent.putExtra("LATLONG", desti);
                     startActivity(intent);
                 }
             }
@@ -112,7 +111,6 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
                 dest = mMap.addMarker(new MarkerOptions().position(latLng).title("Destination"));
                 desti = latLng;
                 txtMain.setText(latLng.toString());
-                mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(desti, 14.0f));
             }
         });
     }

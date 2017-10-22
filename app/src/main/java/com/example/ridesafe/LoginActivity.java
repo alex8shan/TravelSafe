@@ -27,8 +27,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private Button btn;
     private TextView textView;
     private final String TAG = "Ridesafe";
-    private final static int RC_SIGN_IN = 9001;
-    private static String Authid;
+    public final static int RC_SIGN_IN = 9001;
+    public static String Authid;
 
 
     @Override
