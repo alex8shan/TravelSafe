@@ -53,6 +53,7 @@ public class userChoice extends AppCompatActivity {
                 Intent intent = new Intent(getApplicationContext(), Backupload.class);
                 intent.putExtra("ID", LoginActivity.Authid);
                 startService(intent);
+                //here it should be changed to Confirmation
                 intent = new Intent(getApplicationContext(), PanicButton.class);
                 startActivity(intent);
                 userChoice.this.finish();

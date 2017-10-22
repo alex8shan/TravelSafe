@@ -25,6 +25,7 @@ public class Backupload extends Service implements GoogleApiClient.ConnectionCal
     private static final String LOGSERVICE = "#######";
     private String authId = LoginActivity.Authid;
     public static boolean mRunning;
+    public static LatLng lastPos;
 
     DatabaseReference mRootRef = FirebaseDatabase.getInstance().getReference();
     DatabaseReference childRef;
@@ -80,6 +81,7 @@ public class Backupload extends Service implements GoogleApiClient.ConnectionCal
         Log.i(LOGSERVICE, "lat " + location.getLatitude());
         Log.i(LOGSERVICE, "lng " + location.getLongitude());
         LatLng mLocation = (new LatLng(location.getLatitude(), location.getLongitude()));
+        lastPos = mLocation;
 
         Long tsLong = System.currentTimeMillis()/1000;
         String ts = tsLong.toString();

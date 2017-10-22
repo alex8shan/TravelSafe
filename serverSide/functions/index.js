@@ -14,11 +14,11 @@ var client = new twilio('ACa09242192633777e218acddb9ac1512e', 'f670275673b53ccb6
 // });
 
 exports.helloWorld = functions.database.ref('/users/{userId}/panic').onWrite(event => {
-    var something = event.data.ref.parent.child('location').limitToLast(1);
+    var something = event.data.ref.parent.child('location');
     client.messages.create({
         to:'+16609566645',
         from:'+14153607309',
-        body: something
+        body: event.ref.child('time').val()
     }, function(error, message) {
         // The HTTP request to Twilio will run asynchronously. This callback
         // function will be called when a response is received from Twilio
