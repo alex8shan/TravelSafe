@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -58,6 +59,17 @@ public class MapActivity extends AppCompatActivity implements  OnMapReadyCallbac
 
         mgac = new GoogleApiClient.Builder(this).addApi(LocationServices.API).addConnectionCallbacks(this).addOnConnectionFailedListener(this).build();
         txtMain = (TextView) findViewById(R.id.txtMain);
+        Button btnNext = (Button) findViewById(R.id.MapNext);
+        btnNext.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (desti != null) {
+                    Intent intent = new Intent(getApplicationContext(), userChoice.class);
+                    intent.putExtra("LATLONG", desti);
+                    startActivity(intent);
+                }
+            }
+        });
 
         PlaceAutocompleteFragment autocompleteFragment = (PlaceAutocompleteFragment)
                 getFragmentManager().findFragmentById(R.id.place_autocomplete_fragment);
